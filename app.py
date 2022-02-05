@@ -14,7 +14,6 @@ def index():
 @app.route('/ocrApi/<documentName>')
 def ocr_api(documentName):
     textract = boto3.client(service_name='textract')
-
     """{
        "Document": { 
           "Bytes": blob,
@@ -25,20 +24,22 @@ def ocr_api(documentName):
           }
        }
     }"""
+    print(documentName)
     try:
-        res = textract.analyze_expense(
+        response = textract.analyze_expense(
            Document={
                 "S3Object": {
                     "Bucket": "invoice-ocr-poc.22",
                     "Name": documentName
                 }
             })
-        return res
-        #return json.dumps(res), 200, {'content-type': 'application/json'}
-        #return jsonify(app.response_class(response=json.dumps(res),status=200,mimetype='application/json'))
+        return response
         #pretty_printed_string = get_string(textract_json=response, output_type=[Textract_Expense_Pretty_Print.SUMMARY, Textract_Expense_Pretty_Print.LINEITEMGROUPS], table_format=Pretty_Print_Table_Format.fancy_grid)
         #print(pretty_printed_string)
     except Exception as e_raise:
         print(e_raise)
-        return json.dumps(e_raise),400
+        return e_raise
+
+if __name__ == '__main__':
+    app.run(port=8000)
 
