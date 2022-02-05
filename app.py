@@ -1,4 +1,4 @@
-from flask import Flask, render_template,json
+from flask import Flask, render_template,json,jsonify
 import gunicorn
 
 app = Flask(__name__)
@@ -27,11 +27,11 @@ def ocr_api(documentName):
                     "Name": documentName
                 }
             })
-        response = app.response_class(response=json.dumps(res),status=200,mimetype='application/json')
-        return response
+        return json.dumps(res), 200, {'content-type': 'application/json'}
+        #return jsonify(app.response_class(response=json.dumps(res),status=200,mimetype='application/json'))
         #pretty_printed_string = get_string(textract_json=response, output_type=[Textract_Expense_Pretty_Print.SUMMARY, Textract_Expense_Pretty_Print.LINEITEMGROUPS], table_format=Pretty_Print_Table_Format.fancy_grid)
         #print(pretty_printed_string)
     except Exception as e_raise:
         print(e_raise)
-        return app.response_class(response=e_raise,status=400)
+        return json.dumps(e_raise),400
 
