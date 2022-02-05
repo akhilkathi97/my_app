@@ -24,7 +24,6 @@ def ocr_api(documentName):
           }
        }
     }"""
-    print(documentName)
     try:
         response = textract.analyze_expense(
            Document={
@@ -33,12 +32,11 @@ def ocr_api(documentName):
                     "Name": documentName
                 }
             })
-        return response
-        #pretty_printed_string = get_string(textract_json=response, output_type=[Textract_Expense_Pretty_Print.SUMMARY, Textract_Expense_Pretty_Print.LINEITEMGROUPS], table_format=Pretty_Print_Table_Format.fancy_grid)
-        #print(pretty_printed_string)
+        return jsonify(response)
+        
     except Exception as e_raise:
         print(e_raise)
-        return e_raise
+        return jsonify(e_raise)
 
 if __name__ == '__main__':
     app.run(port=8000)
