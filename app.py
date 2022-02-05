@@ -1,9 +1,5 @@
-from flask import Flask, render_template,json,jsonify
-import gunicorn
+from flask import Flask, render_template
 import boto3
-import os
-from textractprettyprinter.t_pretty_print_expense import get_string, Textract_Expense_Pretty_Print, Pretty_Print_Table_Format
-from flask import Flask, jsonify, request,send_file
 
 app = Flask(__name__)
 
@@ -11,32 +7,12 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/ocrApi/<documentName>')
-def ocr_api(documentName):
-    return "Hello World 2.0"
-    textract = boto3.client(service_name='textract')
-    """{
-       "Document": { 
-          "Bytes": blob,
-          "S3Object": { 
-             "Bucket": "string",
-             "Name": "string",
-             "Version": "string"
-          }
-       }
-    }"""
+@app.route('/ocrApi/<doc_name>')
+def ocr_api(doc_name):
     try:
-        response = textract.analyze_expense(
-           Document={
-                "S3Object": {
-                    "Bucket": "invoice-ocr-poc.22",
-                    "Name": documentName
-                }
-            })
-        return jsonify(response)
-        
+        textract = boto3.client(service_name='textract')
+        return textract.analyze_expense(Document={"S3Object": {"Bucket": "invoice-ocr-poc.22","Name": doc_name}})
     except Exception as e_raise:
-        print(e_raise)
         return jsonify(e_raise)
 
 if __name__ == '__main__':
