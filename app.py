@@ -13,8 +13,8 @@ def index():
 
 @app.route('/ocrApi/<documentName>')
 def ocr_api(documentName):
-    textract = boto3.client(service_name='textract')
     return "Hello World 2.0"
+    textract = boto3.client(service_name='textract')
     """{
        "Document": { 
           "Bytes": blob,
