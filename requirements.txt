@@ -1,4 +1,6 @@
 boto3
 flask
+smart_open
+requests
 gunicorn
 amazon-textract-prettyprinter
